@@ -1,0 +1,61 @@
+---
+title: "Reddit data extraction"
+author: "Putcha Vaishnavi"
+date: "1/6/2023"
+output: word_document
+---
+
+
+```{r}
+install.packages("jsonlite")
+install.packages("tidyverse")
+install.packages("dplyr")
+install.packages("http")
+```
+
+```{r}
+library(jsonlite)
+library(tidyverse)
+library(dplyr)
+library(httr)
+```
+
+
+```{r}
+btc1 <- jsonlite::fromJSON("https://www.reddit.com/r/politics/.json")
+btc2 <- jsonlite::fromJSON("https://www.reddit.com/r/business/.json")
+btc3 <- jsonlite::fromJSON("https://www.reddit.com/r/Economics/.json")
+btc4 <- jsonlite::fromJSON("https://www.reddit.com/r/government/.json")
+btc5 <- jsonlite::fromJSON("https://www.reddit.com/r/AmericanGovernment/.json")
+```
+
+```{r}
+df1 <- btc1$data$children$data
+df2 <- btc2$data$children$data
+df3 <- btc3$data$children$data
+df4 <- btc4$data$children$data
+df5 <- btc5$data$children$data
+```
+
+```{r}
+df4
+```
+
+```{r}
+new1 = df1[ ,c("ups", "title", "subreddit", "url")]
+new2 = df2[ ,c("ups", "title", "subreddit", "url")]
+new3 = df3[ ,c("ups", "title", "subreddit", "url")]
+new4 = df4[ ,c("ups", "title", "subreddit", "url")]
+new5 = df5[ ,c("ups", "title", "subreddit", "url")]
+```
+
+```{r}
+all_reddit_data <- rbind(new1, new2, new3, new4, new5)
+all_reddit_data_sorted <-all_reddit_data[order(-all_reddit_data$ups),]
+```
+
+```{r}
+write.csv(all_reddit_data_sorted, "/Users/vaishnaviputcha/Desktop/RA/Work/Reddit/RedditExtractedData.csv", row.names=FALSE)
+```
+
+
